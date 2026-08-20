@@ -1149,22 +1149,22 @@
         <span class="sidebar-label" onclick="newChat()" style="cursor:pointer">New chat</span>
       </div>
       <div class="sidebar-row">
-        <button class="nav-btn" title="Search">
+        <button class="nav-btn" title="Search" onclick="searchChats()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </button>
-        <span class="sidebar-label">Search chats</span>
+        <span class="sidebar-label" onclick="searchChats()" style="cursor:pointer">Search chats</span>
       </div>
       <div class="sidebar-row">
-        <button class="nav-btn" title="Projects">
+        <button class="nav-btn" title="Projects" onclick="toast('Projects feature coming soon!')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
         </button>
-        <span class="sidebar-label">Projects</span>
+        <span class="sidebar-label" onclick="toast('Projects feature coming soon!')" style="cursor:pointer">Projects</span>
       </div>
       <div class="sidebar-row">
-        <button class="nav-btn" title="Claude Code">
+        <button class="nav-btn" title="Claude Code" onclick="toast('Claude Code feature coming soon!')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
         </button>
-        <span class="sidebar-label">Claude Code</span>
+        <span class="sidebar-label" onclick="toast('Claude Code feature coming soon!')" style="cursor:pointer">Claude Code</span>
       </div>
     </div>
     <div class="history-panel" id="historyPanel">
@@ -1552,6 +1552,31 @@ function getHistory() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; }
 }
 function saveHistory(h) { localStorage.setItem(STORAGE_KEY, JSON.stringify(h)); }
+
+function searchChats() {
+  const query = prompt("Search your past chats:");
+  if (query === null) return; // user cancelled
+  const q = query.toLowerCase().trim();
+  const items = document.querySelectorAll('.history-item');
+  let found = 0;
+  
+  if (q === '') {
+    items.forEach(item => { item.style.display = 'flex'; });
+    return;
+  }
+  
+  items.forEach(item => {
+    if (item.textContent.toLowerCase().includes(q)) {
+      item.style.display = 'flex';
+      found++;
+    } else {
+      item.style.display = 'none';
+    }
+  });
+  
+  if (found === 0) toast('No chats found matching "' + query + '"');
+  else toast('Found ' + found + ' chat(s)');
+}
 
 function renderHistory() {
   const h = getHistory();
